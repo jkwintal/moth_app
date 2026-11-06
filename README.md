@@ -14,10 +14,11 @@ The two ADC inputs are provisionally mapped in
 - right sensor: GPIO19 / ADC channel 1
 
 `adc_reader.c` obtains the channel specifications from devicetree and returns
-raw samples. `light_acquisition.c` samples at 20 Hz, filters them, and
-publishes frames through a bounded message queue. `phototaxis.c` compares the
-two light values and logs a forward, left, right, or stop request. No motor
-driver is connected yet.
+raw samples. `light_acquisition.c` samples at 20 Hz, calibrates an independent
+ambient baseline and noise margin for each sensor, subtracts that background,
+filters the result, and publishes frames through a bounded message queue.
+`phototaxis.c` compares the calibrated light values and logs a forward, left,
+right, or stop request. No motor driver is connected yet.
 
 Phototaxis tuning is configured through the application Kconfig symbols:
 
@@ -28,6 +29,13 @@ Phototaxis tuning is configured through the application Kconfig symbols:
 - `CONFIG_MOTH_PHOTOTAXIS_MAXIMUM_SPEED`
 
 They can be changed through `menuconfig` or supplied in `prj.conf`.
+
+At startup, the robot must remain stationary during calibration. The default
+sequence waits 500 ms, collects 32 samples per channel, uses the per-channel
+median as the ambient baseline, and derives a noise margin from the median
+absolute deviation. Frames are marked uncalibrated until this completes, so
+the phototaxis controller requests stop. Afterward, weak background changes
+are followed slowly; stronger signals are preserved as target light.
 
 ## Build
 

@@ -32,12 +32,12 @@ void moth_phototaxis_compute(const struct moth_light_frame *frame,
 		return;
 	}
 
-	request->valid = frame->valid;
+	request->valid = frame->valid && frame->calibrated;
 	request->motion = MOTH_MOTION_STOP;
 	request->left_speed = 0;
 	request->right_speed = 0;
 
-	if (!frame->valid ||
+	if (!frame->valid || !frame->calibrated ||
 	    ((frame->left < config->minimum_light) &&
 	     (frame->right < config->minimum_light))) {
 		return;

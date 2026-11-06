@@ -7,9 +7,9 @@ config MOTH_PHOTOTAXIS_MINIMUM_LIGHT
 	default 100
 	range 0 4095
 	help
-		Minimum raw ADC level required before the phototaxis
-		controller will move. If both sensors are below this value,
-		the controller requests stop.
+		Minimum background-subtracted light level required before the
+		phototaxis controller will move. If both sensors are below this
+		value, the controller requests stop.
 
 config MOTH_PHOTOTAXIS_DEADBAND
 	int "Phototaxis deadband"
@@ -31,8 +31,8 @@ config MOTH_PHOTOTAXIS_TURN_GAIN
 	default 500
 	range 0 32767
 	help
-		Maximum speed correction applied at the full ADC difference.
-		Higher values produce sharper turns.
+		Maximum speed correction applied at the full background-subtracted
+		ADC difference. Higher values produce sharper turns.
 
 config MOTH_PHOTOTAXIS_MAXIMUM_SPEED
 	int "Phototaxis maximum speed"
@@ -40,5 +40,54 @@ config MOTH_PHOTOTAXIS_MAXIMUM_SPEED
 	range 0 32767
 	help
 		Upper bound applied independently to each wheel speed request.
+
+config MOTH_LIGHT_CALIBRATION_SAMPLES
+	int "Light calibration sample count"
+	default 32
+	range 8 64
+	help
+		Number of raw ADC samples collected per sensor during startup
+		calibration. The median is used as the ambient background level.
+
+config MOTH_LIGHT_CALIBRATION_SETTLE_MS
+	int "Light calibration settle time"
+	default 500
+	range 0 5000
+	help
+		Time to keep the robot stationary before collecting calibration
+		samples, allowing the ADC and sensors to settle.
+
+config MOTH_LIGHT_MIN_NOISE_MARGIN
+	int "Minimum light noise margin"
+	default 16
+	range 0 2048
+	help
+		Minimum number of ADC counts removed after background subtraction.
+		This prevents small ambient fluctuations from causing movement.
+
+config MOTH_LIGHT_NOISE_MULTIPLIER
+	int "Light noise multiplier"
+	default 3
+	range 1 8
+	help
+		Multiplier applied to the measured median absolute deviation during
+		calibration to create a per-sensor noise margin.
+
+config MOTH_LIGHT_BACKGROUND_TRACK_LIMIT
+	int "Background tracking limit"
+	default 64
+	range 0 4095
+	help
+		Background tracking is allowed only while both sensors remain below
+		this background-subtracted level. This avoids slowly absorbing a
+		strong target light into the ambient baseline.
+
+config MOTH_LIGHT_BACKGROUND_TRACK_SHIFT
+	int "Background tracking speed"
+	default 8
+	range 1 15
+	help
+		Power-of-two tracking divisor. A value of 8 means the baseline moves
+		by one 256th of the difference per update.
 
 endmenu
