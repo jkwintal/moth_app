@@ -4,4 +4,7 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(moth_app)
 
 target_include_directories(app PRIVATE include)
-target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE
+  src/main.c
+  src/adc_reader.c
+)

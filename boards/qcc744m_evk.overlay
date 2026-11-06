@@ -1,0 +1,29 @@
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/adc/qcc74x-adc.h>
+#include <zephyr/dt-bindings/pinctrl/qc7xx-qcc74x-pinctrl.h>
+
+/ {
+	zephyr,user {
+		/* Provisional wiring: left sensor on GPIO20/ADC0, right on GPIO19/ADC1. */
+		io-channels = <&adc ADC_CHANNEL_0>, <&adc ADC_CHANNEL_1>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+		zephyr,oversampling = <0>;
+	};
+};
+
+&pinctrl {
+	moth_adc_default: moth_adc_default {
+		group1 {
+			pinmux = <GPIO20_ADC_CH0>, <GPIO19_ADC_CH1>;
+		};
+	};
+};
+
+&adc {
+	status = "okay";
+	pinctrl-0 = <&moth_adc_default>;
+	pinctrl-names = "default";
+};
