@@ -1,0 +1,44 @@
+source "Kconfig.zephyr"
+
+menu "Moth application"
+
+config MOTH_PHOTOTAXIS_MINIMUM_LIGHT
+	int "Minimum light level"
+	default 100
+	range 0 4095
+	help
+		Minimum raw ADC level required before the phototaxis
+		controller will move. If both sensors are below this value,
+		the controller requests stop.
+
+config MOTH_PHOTOTAXIS_DEADBAND
+	int "Phototaxis deadband"
+	default 80
+	range 0 4095
+	help
+		Maximum absolute left/right light difference treated as equal.
+		Within this range the controller requests forward motion.
+
+config MOTH_PHOTOTAXIS_BASE_SPEED
+	int "Phototaxis base speed"
+	default 300
+	range 0 32767
+	help
+		Nominal speed requested for each wheel during forward motion.
+
+config MOTH_PHOTOTAXIS_TURN_GAIN
+	int "Phototaxis turn gain"
+	default 500
+	range 0 32767
+	help
+		Maximum speed correction applied at the full ADC difference.
+		Higher values produce sharper turns.
+
+config MOTH_PHOTOTAXIS_MAXIMUM_SPEED
+	int "Phototaxis maximum speed"
+	default 600
+	range 0 32767
+	help
+		Upper bound applied independently to each wheel speed request.
+
+endmenu

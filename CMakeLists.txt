@@ -8,4 +8,5 @@ target_sources(app PRIVATE
   src/main.c
   src/adc_reader.c
   src/light_acquisition.c
+  src/phototaxis.c
 )
